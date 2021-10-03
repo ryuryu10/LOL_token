@@ -4,10 +4,16 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 
+def now_time():
+    now = time.localtime()
+    return "%04d/%02d/%02d %02d:%02d:%02d" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
+
 User_id = str(input("아이디를 입력하세요 : "))
 User_pw = getpass.getpass("비밀번호를 입력하세요 : ")
 
-driver=webdriver.Chrome(ChromeDriverManager().install())
+options = webdriver.ChromeOptions()
+options.add_argument("headless")
+driver=webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
 driver.get('https://store.leagueoflegends.co.kr/loot')
 driver.implicitly_wait(10)
@@ -20,8 +26,16 @@ time.sleep(3)
 driver.get(driver.current_url)
 driver.implicitly_wait(10)
 lis=driver.find_elements_by_xpath('//*[@id="lootMaterial"]/ul/li[8]/div/div/span/span/em')
-print(lis)
 for li in lis:
-    print(li)
     print(li.text)
+
+f = open("log.txt",'a')
+for i in range(11, 20):
+    data = "%d번째 줄입니다.\n" % i
+    f.write(data)
+f.close()
+
 driver.quit()
+
+
+
