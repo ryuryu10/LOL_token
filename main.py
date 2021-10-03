@@ -34,6 +34,16 @@ data = now_time() + li.text + '\n'
 f.write(data)
 f.close()
 
+while True:
+    time.sleep(600)
+    driver.get(driver.current_url)
+    driver.implicitly_wait(10)
+    lis=driver.find_elements_by_xpath('//*[@id="lootMaterial"]/ul/li[8]/div/div/span/span/em')
+    f = open("log.txt",'a')
+    data = now_time() + li.text + '\n'
+    f.write(data)
+    f.close()
+
 driver.quit()
 
 
