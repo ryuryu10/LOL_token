@@ -17,7 +17,7 @@ def now_time():
 
 def now_date():
     now = time.localtime()
-    return "%04d/%02d/%02d" % (now.tm_year, now.tm_mon, now.tm_mday)
+    return "%04d-%02d-%02d" % (now.tm_year, now.tm_mon, now.tm_mday)
 
 User_id = str(input("아이디를 입력하세요 : "))
 User_pw = getpass.getpass("비밀번호를 입력하세요 : ")
@@ -44,6 +44,7 @@ def reload_ses():
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
     driver=webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    driver.get('https://store.leagueoflegends.co.kr/loot')
     driver.implicitly_wait(10)
     driver.find_element_by_name('username').send_keys(User_id)
     time.sleep(1)
@@ -58,19 +59,20 @@ driver.quit()
 
 while True:
     to_day = now_date()
-    if os.path.isfile('/data/{0}.csv'.format(now_date())):
+    if os.path.isfile('data/{0}.csv'.format(now_date())):
         driver.get(driver.current_url)
         driver.implicitly_wait(10)
         lis=driver.find_elements_by_xpath('//*[@id="lootMaterial"]/ul/li[8]/div/div/span/span/em')
         for li in lis:
             token = li.text
         if token >= 0:
-            csv_file = open('/data/{0}.csv'.format(now_date()),'a',newline='')
+            csv_file = open('data/{0}.csv'.format(now_date()),'a',newline='')
             csv_write= csv.writer(csv_file)
             csv_write.writerow([now_date(),now_time(),token])
             csv_file.close()
             time.sleep(600)
         else:
             reload_ses()
-    else:
+        f = open('data/{0}.csv'.format(now_date()),'w')
+        f.close()
         reload_ses()
