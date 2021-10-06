@@ -5,8 +5,15 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 import os.path
+import os
 import csv
 import cv2
+import platform 
+
+if platform.system() == 'Darwin':
+    CCMD = 'clear'
+else:
+    CCMD = "cls"
 
 global driver
 
@@ -20,11 +27,16 @@ def now_date():
     now = time.localtime()
     return "%04d-%02d-%02d" % (now.tm_year, now.tm_mon, now.tm_mday)
 
+def LOG(message):
+    print('[{0}} {1}] {2}'.format(now_date(), now_time(), message))
+
+os.system(CCMD)
 User_id = str(input("아이디를 입력하세요 : "))
 User_pw = getpass.getpass("비밀번호를 입력하세요 : ")
 options = webdriver.ChromeOptions()
 options.add_argument("headless")
 driver=webdriver.Chrome(ChromeDriverManager().install(), options=options)
+os.system(CCMD)
 driver.get('https://store.leagueoflegends.co.kr/loot')
 driver.implicitly_wait(10)
 driver.find_element_by_name('username').send_keys(User_id)
@@ -56,29 +68,25 @@ def reload_ses():
     driver.get(driver.current_url)
 
 print("[{0}] 로깅준비중...".format(now_time()))
-driver.quit()
-
-while True:
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord('q'):
-        driver.quit()
-        break
-    if os.path.isfile('data/{0}.csv'.format(now_date())):
-        driver.get('https://store.leagueoflegends.co.kr/loot')
-        driver.get(driver.current_url)
-        driver.implicitly_wait(10)
-        lis=driver.find_elements_by_xpath('//*[@id="lootMaterial"]/ul/li[8]/div/div/span/span/em')
-        for li in lis:
-            token = li.text
-        if int(token) >= 0:
-            csv_file = open('data/{0}.csv'.format(now_date()),'a',newline='')
-            csv_write= csv.writer(csv_file)
-            csv_write.writerow([now_date(),now_time(),token])
-            csv_file.close()
-            time.sleep(600)
+try:
+    while True:
+        if os.path.isfile('data/{0}.csv'.format(now_date())):
+            driver.get(driver.current_url)
+            driver.implicitly_wait(10)
+            lis=driver.find_elements_by_xpath('//*[@id="lootMaterial"]/ul/li[8]/div/div/span/span/em')
+            for li in lis:
+                token = li.text
+            if int(token) >= 0:
+                csv_file = open('data/{0}.csv'.format(now_date()),'a',newline='')
+                csv_write= csv.writer(csv_file)
+                csv_write.writerow([now_date(),now_time(),token])
+                csv_file.close()
+                time.sleep(600)
+            else:
+                reload_ses()
         else:
+            f = open('data/{0}.csv'.format(now_date()),'w')
+            f.close()
             reload_ses()
-    else:
-        f = open('data/{0}.csv'.format(now_date()),'w')
-        f.close()
-        reload_ses()
+except KeyboardInterrupt:
+    driver.quit()
