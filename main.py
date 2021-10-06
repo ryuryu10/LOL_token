@@ -7,6 +7,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os.path
 import csv
 
+global driver
+
 from webdriver_manager.utils import validate_response
 
 def now_time():
@@ -34,32 +36,41 @@ lis=driver.find_elements_by_xpath('//*[@id="lootMaterial"]/ul/li[8]/div/div/span
 for li in lis:
     print("[{0}] {1}의 패스토큰을 확인하였습니다.".format(now_time(), li.text))
 
+def reload_ses():
+    global driver
+    driver.quit()
+    options = webdriver.ChromeOptions()
+    driver=webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    driver.implicitly_wait(10)
+    driver.find_element_by_name('username').send_keys(User_id)
+    time.sleep(1)
+    driver.find_element_by_name('password').send_keys(User_pw)
+    time.sleep(1)
+    driver.find_element_by_xpath('/html/body/div/div/div/div[2]/div/div/button').click()
+    time.sleep(3)
+    driver.get(driver.current_url)
+
 print("[{0}] 로깅준비중...".format(now_time()))
 driver.quit()
 
 while True:
     to_day = now_date()
-    if os.path.isfile('{0}.csv'.format(now_date())):
-        csv_file = open('{0}.csv'.format(now_date()),'a',newline='')
-        csv_write= csv.writer(csv_file)
-        csv_write.writerow(['123','123'])
-        csv_file.close()
-    else:
-        pass
-    if to_day == validate_response:
-        total_ordering
-    else:
-        driver.quit()
-        options = webdriver.ChromeOptions()
-        driver=webdriver.Chrome(ChromeDriverManager().install(), options=options)
-        driver.implicitly_wait(10)
-        driver.find_element_by_name('username').send_keys(User_id)
-        time.sleep(1)
-        driver.find_element_by_name('password').send_keys(User_pw)
-        time.sleep(1)
-        driver.find_element_by_xpath('/html/body/div/div/div/div[2]/div/div/button').click()
-        time.sleep(3)
+    if os.path.isfile('/data/{0}.csv'.format(now_date())):
         driver.get(driver.current_url)
+        driver.implicitly_wait(10)
+        lis=driver.find_elements_by_xpath('//*[@id="lootMaterial"]/ul/li[8]/div/div/span/span/em')
+        for li in lis:
+            token = li.text
+        if token >= 0:
+            csv_file = open('/data/{0}.csv'.format(now_date()),'a',newline='')
+            csv_write= csv.writer(csv_file)
+            csv_write.writerow(['123','123'])
+            csv_file.close()
+        else:
+            reload_ses()
+    else:
+        reload_ses()
+        
 
 
 while True:
