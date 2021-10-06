@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 import os.path
 import csv
+import cv2
 
 global driver
 
@@ -58,14 +59,18 @@ print("[{0}] 로깅준비중...".format(now_time()))
 driver.quit()
 
 while True:
-    to_day = now_date()
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('q'):
+        driver.quit()
+        break
     if os.path.isfile('data/{0}.csv'.format(now_date())):
+        driver.get('https://store.leagueoflegends.co.kr/loot')
         driver.get(driver.current_url)
         driver.implicitly_wait(10)
         lis=driver.find_elements_by_xpath('//*[@id="lootMaterial"]/ul/li[8]/div/div/span/span/em')
         for li in lis:
             token = li.text
-        if token >= 0:
+        if int(token) >= 0:
             csv_file = open('data/{0}.csv'.format(now_date()),'a',newline='')
             csv_write= csv.writer(csv_file)
             csv_write.writerow([now_date(),now_time(),token])
@@ -73,6 +78,7 @@ while True:
             time.sleep(600)
         else:
             reload_ses()
+    else:
         f = open('data/{0}.csv'.format(now_date()),'w')
         f.close()
         reload_ses()
