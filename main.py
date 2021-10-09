@@ -1,4 +1,4 @@
-from functools import total_ordering
+
 import getpass
 import time
 from selenium import webdriver
