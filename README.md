@@ -1,5 +1,11 @@
-![1](https://i.ibb.co/fDT40r9/1.png)
+
 # League Of Legends Pass Token Logger   ![](https://img.shields.io/badge/README%20Language-kor-blue?style=flat-square)
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3766AB?style=flat-square&logo=Python&logoColor=white"/></a>
+  <img src="https://img.shields.io/badge/Selenium-43B02A?style=flat-square&logo=Selenium&logoColor=white"/></a>
+</p>
+
 리그오브레전드의 패스 토큰 변화량을 기록할수 있는 프로그램입니다.
 
 ##  목차
