@@ -15,9 +15,25 @@
 
 ## 설치 방법
 
-이곳을 눌러 ZIP파일을 다운로드하세요.
+1. [이곳](https://github.com/ryuryu10/LOL_token/archive/refs/heads/main.zip)을 눌러 ZIP파일을 다운로드하세요.
+2. main.py를 실행하세요.
 ```
-$ cd ../lorem
-$ npm install
-$ npm start
+python main.py
 ```
+
+### 필요한 라이브러리
+#### main.py를 실행하기전 사전에 아래 라이브러리들이 설치되있어야합니다.
+```
+python-opencv
+selenium
+
+최신버전을 설치하는것을 권장합니다.
+```
+
+## 사용법
+1. 필요한 라이브러리에 있는 라이브러리를 설치합니다.
+2. python main.py를 터미널에서 실행합니다.
+3. 리그오브레전드계정의 아이디, 비밀번호를 입력합니다.
+4. 기다립니다.
+
+./data/ 폴더안에 날짜별로 .csv형태로 기록됩니다.
